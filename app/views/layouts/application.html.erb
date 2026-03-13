@@ -14,9 +14,8 @@
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
     <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
 
-    <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/icon.png">
+    <link rel="icon" href="/refund.png" type="image/png">
+    <link rel="apple-touch-icon" href="/refund.png">
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
@@ -24,6 +23,41 @@
   </head>
 
   <body>
-    <%= yield %>
+    <header class="site-header">
+      <nav class="site-nav">
+        <%= link_to "Reimbursement Portal", root_path, class: "brand-mark" %>
+
+        <% if logged_in? %>
+          <div class="nav-actions">
+            <span class="nav-user"><%= current_user.full_name %> (<%= current_user.role %>)</span>
+            <%= button_to "Sign out", session_path, method: :delete, class: "nav-button" %>
+          </div>
+        <% else %>
+          <%= link_to "Sign in", new_session_path, class: "nav-link" %>
+        <% end %>
+      </nav>
+    </header>
+
+    <div class="page-shell">
+      <% flash.each do |type, message| %>
+        <div class="flash <%= type %>"> 
+          <span><%= message %></span>
+          <button type="button" class="flash-close" onclick="this.parentElement.remove();">&times;</button>
+        </div>
+      <% end %>
+      <% if logged_in? %>
+        <div class="topbar">
+          <% if current_user.admin? %>
+            <nav class="tabs-nav">
+              <%= link_to "Employee List", employees_path,
+                  class: "tab-link #{current_page?(employees_path) ? 'active' : ''}" %>
+              <%= link_to "Reimbursement Requests", bills_path,
+                  class: "tab-link #{current_page?(bills_path) ? 'active' : ''}" %>
+            </nav>
+          <% end %>
+        </div>
+      <% end %>
+      <%= yield %>
+  </div>
   </body>
 </html>

@@ -1,0 +1,36 @@
+
+<main>
+  <div class="page-header">
+    <h2>Employees</h2>
+    <%= link_to "Add Employee", new_employee_path, class: "primary-button" %>
+  </div>
+  <% if @employees.any? %>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Department</th>
+          <th>Designation</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @employees.each do |employee| %>
+          <tr>
+            <td><%= employee.user.full_name %></td>
+            <td><%= employee.department&.name %></td>
+            <td><%= employee.designation %></td>
+            <td>
+              <%= link_to "Edit", edit_employee_path(employee) %>
+              <% if employee.user != current_user %>
+                <%= button_to "Delete", employee_path(employee), method: :delete, form: { data: { turbo_confirm: "Delete this employee?" } } %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p>No employees found.</p>
+  <% end %>
+</main>

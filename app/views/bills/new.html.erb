@@ -1,0 +1,24 @@
+
+<main>
+  <h2>Submit Reimbursement</h2>
+
+  <%= form_with model: @bill do |form| %>
+
+    <div class="form-row">
+      <div class="field">
+        <%= form.label :bill_type, "Type" %>
+        <%= form.select :bill_type, Bill.bill_types.keys.map { |type| [type.titleize, type] }, prompt: "Select Type" %>
+      </div>
+      <div class="field">
+        <%= form.label :amount %>
+        <%= form.number_field :amount, step: 0.01 %>
+      </div>
+    </div>
+
+    <div class="actions">
+      <%= form.submit "Submit Bill", class: "primary-button" %>
+      <%= link_to "Cancel", bills_path %>
+    </div>
+
+  <% end %>
+</main>

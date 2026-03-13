@@ -1,0 +1,51 @@
+<% all_errors = [] %>
+<% all_errors += employee.errors.full_messages if employee.errors.any? %>
+<% all_errors += employee.user.errors.full_messages if employee.user&.errors&.any? %>
+
+<% if all_errors.any? %>
+  <div class="form-error">
+    <p><%= pluralize(all_errors.count, "error") %> prevented this employee from saving:</p>
+    <ul>
+      <% all_errors.uniq.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+
+<%= form_with model: employee do |form| %>
+  <div class="form-row">
+    <div class="field">
+      <%= label_tag "user_first_name", "First name" %>
+      <%= text_field_tag "user[first_name]", employee.user&.first_name, required: true %>
+    </div>
+
+    <div class="field">
+      <%= label_tag "user_last_name", "Last name" %>
+      <%= text_field_tag "user[last_name]", employee.user&.last_name, required: true %>
+    </div>
+
+    <div class="field">
+      <%= label_tag "user_email", "Email" %>
+      <%= email_field_tag "user[email]", employee.user&.email, required: true %>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="field">
+      <%= form.label :designation %>
+      <%= form.text_field :designation, required: true %>
+    </div>
+
+    <div class="field">
+      <%= form.label :department_id, "Department" %>
+      <%= form.collection_select :department_id, departments, :id, :name, { prompt: "Select a department" }, { required: true } %>
+    </div>
+  </div>
+
+  <div class="actions">
+    <%= form.submit class: "primary-button" %>
+    <%= link_to "Cancel", employees_path %>
+  </div>
+<% end %>

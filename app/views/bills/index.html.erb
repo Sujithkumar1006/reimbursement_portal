@@ -1,0 +1,62 @@
+
+<main>
+  <div class="page-header">
+    <h2>My Bills</h2>
+     <% if current_user.employee? %>
+       <%= link_to "Submit Bill", new_bill_path, class: "primary-button" %>
+     <% end %>
+  </div>
+   <div class="page-header1">
+    <p>Total Submitted: <%= number_with_precision(@bills.sum(:amount), precision: 2) %></p>
+    <p>Total Approved: <%= number_with_precision(@bills.approved.sum(:amount), precision: 2) %></p>
+  </div>
+
+  <% if @bills.any? %>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Amount</th>
+          <th>Date of Submission</th>
+           <% if current_user.admin? %>
+            <th>Submitted by</th>
+            <th>Department</th>
+            <th>Action</th>
+            <% else %>
+              <th>Status</th>
+           <% end %>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @bills.each do |bill| %>
+          <tr>
+            <td><%= bill.bill_type.titleize %></td>
+            <td><%= number_with_precision(bill.amount, precision: 2) %></td>
+            <td><%= bill.created_at.strftime("%d %b %Y") %></td>
+            <% if current_user.admin? %>
+              <td><%= bill.user.full_name %></td>
+              <td><%= bill.user.employee.department.name %></td>
+              <td>
+                <% if bill.pending? %>
+                  <div class="action-buttons">
+                    <%= button_to "Approve", bill_path(bill, status: :approved), method: :patch, class: "approve-btn" %>
+                    <%= button_to "Reject", bill_path(bill, status: :rejected), method: :patch, class: "reject-btn" %>
+                  </div>
+                <% else %>
+                  <span class="status <%= bill.status %>"><%= bill.status.titleize %></span>
+                <% end %>
+              </td>
+            <% else %>
+              <td class="status <%= bill.status %>">
+                <%= bill.status.titleize %>
+              </td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p>No reimbursement requests submitted yet.</p>
+  <% end %>
+</main>
