@@ -21,7 +21,8 @@ class User < ApplicationRecord
 
   def set_default_password
     return if password.present?
-    self.password = "Think@123"
-    self.password_confirmation = "Think@123"
+    password = (0...50).map { ("a".."z").to_a[rand(26)] }.join
+    self.password = password
+    self.password_confirmation = password
   end
 end

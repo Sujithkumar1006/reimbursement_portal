@@ -1,24 +1,152 @@
-# README
+# Reimbursement Portal (Ruby on Rails)
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+A simple reimbursement management system where employees can submit expense bills and administrators can manage employees and approve or reject reimbursement requests.
 
-Things you may want to cover:
+---
 
-* Ruby version
+## Features
 
-* System dependencies
+### Authentication
+- Email and password based login
+- Role based access (`admin`, `employee`)
 
-* Configuration
+### Admin
+- View all employees
+- Create, update and delete employees
+- View all reimbursement requests
+- Approve or reject reimbursement requests
 
-* Database creation
+### Employee
+- Submit reimbursement bills
+- View their submitted bills
+- Track bill status
 
-* Database initialization
+---
 
-* How to run the test suite
+## Tech Stack
 
-* Services (job queues, cache servers, search engines, etc.)
+- Ruby on Rails
+- PostgreSQL
+- ERB
+- HTML / CSS
 
-* Deployment instructions
+---
 
-* ...
+## Database Design
+
+The system separates authentication from employee profile information.
+
+### Users
+
+Stores authentication and identity information.
+
+Fields:
+- first_name
+- last_name
+- email
+- password_digest
+- role
+
+Associations:
+- has_one :employee
+- has_many :bills
+
+---
+
+### Employees
+
+Stores organization specific employee details.
+
+Fields:
+- designation
+- department_id
+- user_id
+
+Associations:
+- belongs_to :user
+- belongs_to :department
+
+---
+
+### Departments
+
+Stores department information.
+
+Fields:
+- name
+
+Associations:
+- has_many :employees
+
+---
+
+### Bills
+
+Stores reimbursement requests submitted by employees.
+
+Fields:
+- bill_type (Food / Travel / Others)
+- amount
+- status (Pending / Approved / Rejected)
+- user_id
+
+Associations:
+- belongs_to :user
+
+---
+
+## Model Relationships
+
+User
+ ├── has_one Employee
+ └── has_many Bills
+
+Employee
+ ├── belongs_to User
+ └── belongs_to Department
+
+Department
+ └── has_many Employees
+
+Bill
+ └── belongs_to User
+
+---
+
+## Default Behavior
+
+When an admin creates an employee:
+
+- A `User` record is automatically created
+- Role is set to `employee`
+- Default password is generated randomly and stored
+
+Employees can log in using their email and this password.
+
+---
+
+## Setup
+
+Install dependencies
+
+bundle install
+
+Setup database
+
+rails db:create  
+rails db:migrate  
+rails db:seed
+
+Start server
+
+rails server
+
+Open in browser
+
+http://localhost:3000
+
+---
+
+## Author
+
+Sujith
