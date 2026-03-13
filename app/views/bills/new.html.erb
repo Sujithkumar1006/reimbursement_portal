@@ -2,16 +2,26 @@
 <main>
   <h2>Submit Reimbursement</h2>
 
+  <% if @bill.errors.any? %>
+    <div class="form-error">
+      <ul>
+        <% @bill.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
   <%= form_with model: @bill do |form| %>
 
     <div class="form-row">
       <div class="field">
         <%= form.label :bill_type, "Type" %>
-        <%= form.select :bill_type, Bill.bill_types.keys.map { |type| [type.titleize, type] }, prompt: "Select Type" %>
+        <%= form.select :bill_type, Bill.bill_types.keys.map { |type| [type.titleize, type] }, { prompt: "Select Type" }, { required: true } %>
       </div>
       <div class="field">
         <%= form.label :amount %>
-        <%= form.number_field :amount, step: 0.01 %>
+        <%= form.number_field :amount, step: 0.01, required: true %>
       </div>
     </div>
 
