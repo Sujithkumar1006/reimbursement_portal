@@ -1,4 +1,4 @@
-# Reimbursement Portal (Ruby on Rails)
+# Reimbursement Portal (Ruby on Rails monolith)
 
 A simple reimbursement management system where employees can submit expense bills and administrators can manage employees and approve or reject reimbursement requests.
 
