@@ -1,6 +1,8 @@
 class BillsController < ApplicationController
   before_action :require_login
+
   before_action :set_bill, only: :update
+  
   before_action :require_admin, only: :update
 
   def index
